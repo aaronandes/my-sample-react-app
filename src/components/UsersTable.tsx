@@ -5,9 +5,11 @@ import styled from 'styled-components';
 const url = 'https://randomuser.me/api';
 
 interface UserData {
-    first: string;
-    last: string;
-    title: string;
+    email: string;
+    name: {
+      first: string;
+      last: string;
+    };
 }
 
 export const UsersTable = () => {
@@ -21,12 +23,10 @@ export const UsersTable = () => {
 
       try {
         const res = await axios.get(url);
-        console.log('res', res);
-        const resData: UserData = await res.data.results[0].name;
+        const resData: UserData = await res.data.results[0];
         console.log('resData', resData);
         
         setUserData(resData);
-
       } catch (err: any) {
         console.log('error',err);
         setErrorMsg(err);
@@ -63,7 +63,8 @@ export const UsersTable = () => {
             {!loading && !errorMsg && (
             <div>
             <h1>User Data</h1>
-            <p>{userData?.first} {userData?.last}</p>
+            <p><b>Email:</b> {userData?.email}</p>
+            <p><b>Name:</b> {userData?.name?.first} {userData?.name?.last}</p>
             <StyledButton onClick={fetchData}> Refresh </StyledButton>
             </div>
             )}
@@ -97,7 +98,7 @@ const StyledErrorDiv = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 20px;
-`
+`;
 
 
 const StyledSpinner = styled.svg`
